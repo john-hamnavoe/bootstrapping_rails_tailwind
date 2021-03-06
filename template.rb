@@ -1,6 +1,6 @@
 =begin
-Template Name: Kickoff - Tailwind CSS
-Author: Andy Leverenz
+Template Name: Hamnavoe - Tailwind CSS
+Author: Andy Leverenz/John H Wallace (for my needs)
 Author URI: https://web-crunch.com
 Instructions: $ rails new myapp -d <postgresql, mysql, sqlite3> -m template.rb
 =end
@@ -12,6 +12,7 @@ end
 def add_gems
   gem 'devise', '~> 4.7', '>= 4.7.3'
   gem 'friendly_id', '~> 5.4', '>= 5.4.1'
+  gem 'redis', '~> 4.2', '>= 4.2.2'
   gem 'sidekiq', '~> 6.1', '>= 6.1.2'
   gem 'name_of_person', '~> 1.1', '>= 1.1.1'
 end
@@ -77,6 +78,7 @@ end
 
 def add_foreman
   copy_file "Procfile"
+  copy_file "Procfile.dev"
 end
 
 def add_friendly_id
@@ -106,7 +108,7 @@ after_bundle do
   git commit: %Q{ -m "Initial commit" }
 
   say
-  say "Kickoff app successfully created! 👍", :green
+  say "Hamnavoe app successfully created! 👍", :green
   say
   say "Switch to your app by running:"
   say "$ cd #{app_name}", :yellow
