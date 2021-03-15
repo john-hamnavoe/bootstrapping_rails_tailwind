@@ -1,0 +1,8 @@
+<% order_reflex = "click->#{reflex}#order"%>
+<%= link_to "#", class: column_css(column), data: { reflex: order_reflex, column_name: column } do %>
+  <span>
+    <%= title %>
+    <i class="<%= "fas fa-long-arrow-alt-down #{arrow_css_down(column)}"%>"></i>
+    <i class="<%= "fas fa-long-arrow-alt-up #{arrow_css_up(column)}"%>"></i>
+  </span>
+<% end %>

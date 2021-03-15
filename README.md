@@ -29,6 +29,8 @@ When creating a new rails app simply pass the template file through.
 $ rails new sample_app -d <postgresql, mysql, sqlite3> -m template.rb
 ```
 
+NOTE: If it asked to override application_reflex.rb then say no. (Just type n).
+
 ### Once installed what do I get?
 
 - Webpack support + Tailwind CSS configured in the `app/javascript` directory.
@@ -40,6 +42,10 @@ $ rails new sample_app -d <postgresql, mysql, sqlite3> -m template.rb
 - Git initialization out of the box
 - PurgeCSS configuration to help with CSS file sizes 
 - Custom defaults for button and form elements
+- Stimulus Reflex 
+- Fontawesome Fonts
+- Sortable JS
+- Notifications via noticed gem
 
 ### Boot it up
 

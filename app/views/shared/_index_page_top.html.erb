@@ -1,0 +1,17 @@
+<div class="flex w-full overflow-hidden mb-2" key="<%= reflex %>">
+  <div class="flex  w-2/6">
+    <%= content_for?(:toolbar_col_1) ? yield(:toolbar_col_1) : "" %>
+  </div>
+  <div class="flex  w-2/6">
+    <%= content_for?(:toolbar_col_2) ? yield(:toolbar_col_2) : "" %>
+  </div>
+  <div class="flex  w-1/6">
+    <%= content_for?(:toolbar_col_3) ? yield(:toolbar_col_3) : "" %>
+  </div>
+  <div class="flex w-1/6">
+    <% unless hide_search ||= false %>
+      <input type="search" class="input-sm" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" value="<%= query %>"
+                data-reflex="input-><%= reflex %>#search" >
+    <% end %>
+  </div>
+</div>

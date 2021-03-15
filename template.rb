@@ -11,10 +11,24 @@ end
 
 def add_gems
   gem 'devise', '~> 4.7', '>= 4.7.3'
+  gem 'font-awesome-sass', '~> 5.15.1'
   gem 'friendly_id', '~> 5.4', '>= 5.4.1'
+  gem 'noticed', '~> 1.2', '>= 1.2.21'
+  gem 'pagy', '~> 3.8', '>= 3.8.3'
   gem 'redis', '~> 4.2', '>= 4.2.2'
   gem 'sidekiq', '~> 6.1', '>= 6.1.2'
   gem 'name_of_person', '~> 1.1', '>= 1.1.1'
+
+  gem_group :development, :test do
+    # test emails
+    gem "letter_opener"
+
+    # lint
+    gem "rubocop", "0.82.0"
+    gem "rubocop-github", "0.16.0"
+    gem "rubocop-performance", "1.7.0", require: false
+    gem "rubocop-rails", "2.6.0", require: false  
+  end
 end
 
 def add_users
@@ -37,11 +51,19 @@ def add_users
   end
 
   # name_of_person gem
-  append_to_file("app/models/user.rb", "\nhas_person_name\n", after: "class User < ApplicationRecord")
+  append_to_file("app/models/user.rb", "\n  has_person_name\n", after: "class User < ApplicationRecord")
+  append_to_file("app/models/user.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error\n", after: "class User < ApplicationRecord")
+  append_to_file("app/models/user.rb", "\n  has_many :notifications, as: :recipient\n", after: "class User < ApplicationRecord")
 end
 
 def copy_templates
   directory "app", force: true
+  # sometimes in VS the tailwind intellsense was picking up the tailwind.config.js here and not finding tailwind css it did not install
+  # so file has been renamed in template and we set up this way so it does not clash with the intellesense
+  copy_file "app/javascript/stylesheets/tailwind.config.js.erb", "./app/javascript/stylesheets/tailwind.config.js"
+  remove_file "app/javascript/stylesheets/tailwind.config.js.erb"
+
+  copy_file ".rubocop.yml"
 end
 
 def add_tailwind
@@ -85,6 +107,43 @@ def add_friendly_id
   generate "friendly_id"
 end
 
+def add_notifications
+  generate "noticed:model"
+
+  route "resources :notifications, only: [:index]"
+  route "resources :notification_all_as_reads, only: [:create]"
+end
+
+def add_organisations
+  generate :model, "organisation", "name:string", "user:references"
+  generate :model, "organisation_membership", "organisation:references", "user:references", "is_admin:boolean"
+  route "resources :organisations, only: [:new, :edit, :update, :create]"
+
+  append_to_file("app/models/organisation.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error \n", after: "belongs_to :user")
+end
+
+def add_stimulus_and_reflex
+  gem 'stimulus_reflex', '~> 3.4'
+  rails_command "webpacker:install:stimulus"
+  rails_command "stimulus_reflex:install"
+  run "yarn add tailwindcss-stimulus-components"
+
+  append_to_file("app/javascript/controllers/index.js", "\nimport { Dropdown, Modal, Tabs, Popover, Toggle, Slideover } from \"tailwindcss-stimulus-components\"")
+  append_to_file("app/javascript/controllers/index.js", "\napplication.register('dropdown', Dropdown)")
+  append_to_file("app/javascript/controllers/index.js", "\napplication.register('modal', Modal)")
+  append_to_file("app/javascript/controllers/index.js", "\napplication.register('tabs', Tabs)")
+  append_to_file("app/javascript/controllers/index.js", "\napplication.register('popover', Popover)")
+  append_to_file("app/javascript/controllers/index.js", "\napplication.register('toggle', Toggle)")
+  append_to_file("app/javascript/controllers/index.js", "\napplication.register('slideover', Slideover)")
+
+  run "yarn add debounced"
+  inject_into_file("app/javascript/controllers/index.js", "\nimport debounced from 'debounced' \n\ndebounced.initialize()", after: "import controller from '../controllers/application_controller'")
+
+  run "yarn add sortablejs"
+
+  copy_file "drag_controller.js", "./app/javascript/controllers/drag_controller.js"
+end
+
 # Main setup
 source_paths
 
@@ -98,6 +157,9 @@ after_bundle do
   copy_templates
   add_tailwind
   add_friendly_id
+  add_notifications
+  add_organisations
+  add_stimulus_and_reflex
 
   # Migrate
   rails_command "db:create"

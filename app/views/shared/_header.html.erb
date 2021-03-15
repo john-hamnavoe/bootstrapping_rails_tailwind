@@ -1,7 +1,9 @@
 <header class="mb-4">
   <nav class="flex flex-wrap items-center justify-between px-3 py-3 text-gray-700 bg-gray-100 lg:px-10">
     <div class="flex items-center mr-6 flex-no-shrink">
-      <%= link_to "Hamnavoe", root_path, class:"link text-xl tracking-tight font-black" %>
+      <%= link_to root_path, class:"link text-xl tracking-tight font-black" do %>
+        <%= image_tag("logo.svg", alt: "hamnavoe partners", class: "h-8")%>
+      <% end %>
     </div>
     <div class="block lg:hidden">
       <button class="flex items-center px-3 py-2 border border-gray-500 rounded text-grey hover:text-gray-600 hover:border-gray-600">
@@ -10,12 +12,42 @@
     </div>
     <div class="items-center block w-full text-center lg:flex-1 lg:flex lg:text-left">
       <div class="lg:flex-grow">
-        <%= link_to "Basic Link", "#", class: "block mt-4 lg:inline-block lg:mt-0 lg:mr-4 mb-2 lg:mb-0 link" %>
+        <% if user_signed_in? %>
+          <%= link_to root_path, class: nav_link_class(["/home"], "purple-500") do %>
+            <i class="fas fa-chart-line fa-fw mr-2"></i><span class="pb-1 md:pb-0 text-sm">Basic Link</span>
+          <% end %>
+        <% end %>
       </div>
       <div class="items-center block w-full mt-2 text-center lg:flex lg:flex-row lg:flex-1 lg:mt-0 lg:text-left lg:justify-end">
         <% if user_signed_in? %>
-          <%= link_to "Edit account", edit_user_registration_path, class: "btn btn-default mb-2 lg:mr-2 lg:mb-0 block" %>
-          <%= link_to "Log out", destroy_user_session_path, method: :delete, class:"btn btn-default mb-2 lg:mb-0 block" %>
+          <%= link_to notifications_path, class: "block mt-4 lg:inline-block lg:mt-0 lg:mr-4 mb-2 lg:mb-0 link" do %>
+            <span class="relative inline-block  mr-2">
+              <i class="far fa-lg fa-bell" aria-hidden="true"></i>
+              <span id="notification_span_count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"><%=  current_user.notifications.unread.count %></span>
+            </span>
+          <% end %>
+          <div id="settings_menu" data-controller="dropdown" class="relative <%= nav_link_class(["/organisation", "/user", "/grid"], "blue-500")%>">
+            <div data-action="click->dropdown#toggle click@window->dropdown#hide" role="button" data-dropdown-target="button" tabindex="0" >
+              <span class="appearance-none flex items-center">
+                <i class="fas fa-cog fa-fw mr-2"></i>
+                Settings
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="h-4 w-4"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path></svg>
+              </span>
+            </div>
+            <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+              <% if current_organisation.present? %>
+                <div class="py-1" role="none">
+                  <%= link_to 'Organisation Settings',  edit_organisation_path(current_organisation), class:"block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900", role: "menuitem" %>
+                </div>
+              <% end %>
+              <div class="py-1" role="none">
+                <%= link_to "Your Settings", edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900", role:"menuitem" %>
+              </div>
+              <div class="py-1" role="none">
+                <%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900", role:"menuitem"%>
+              </div>
+            </div>
+          </div>
         <% else %>
           <%= link_to "Login", new_user_session_path, class:"btn btn-default mb-2 lg:mr-2 lg:mb-0 block" %>
           <%= link_to "Sign Up", new_user_registration_path, class:"btn btn-default block" %>

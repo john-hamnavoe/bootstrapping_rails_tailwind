@@ -6,13 +6,15 @@
 }
 
 .input {
-  @apply appearance-none block text-sm w-full text-gray-700 border border-gray-400 rounded px-3 leading-tight bg-white shadow-inner;
+  @apply  block w-full text-gray-700 border  placeholder-gray-600 border-gray-400 rounded-lg px-3 bg-white shadow-inner;
   padding-top: .65rem;
   padding-bottom: .65rem;
 }
 
 .input-sm {
-  @apply appearance-none block w-full h-8 px-2 text-sm text-gray-700 placeholder-gray-600 border border-gray-400 rounded-lg leading-tight bg-white shadow-inner;
+  @apply  px-1 text-sm leading-tight;
+  padding-top: 0rem;
+  padding-bottom: 0rem;
 }
 
 .input-checkbox {
@@ -34,9 +36,7 @@
 
 
 .select {
-  @apply appearance-none py-3 px-4 pr-8 block w-full bg-white border border-gray-300 text-gray-700 rounded leading-tight;
-  -webkit-appearance: none;
-
+  @apply  py-3 px-4 pr-8 block w-full bg-white border border-gray-300 text-gray-700 rounded leading-tight;
 }
 
 .select:focus {

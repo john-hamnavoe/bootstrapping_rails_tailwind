@@ -1,0 +1,71 @@
+<div class="bg-brand px-4 py-5 border-b rounded-t sm:px-6">
+  <h3 class="text-lg leading-6 font-medium text-white">
+    Unread Notifications
+  </h3>
+</div>
+<div class="bg-white shadow overflow-hidden sm:rounded-md">
+  <ul class="divide-y divide-gray-200">
+    <% current_user.notifications.unread.newest_first.each do |notification| %>
+      <li>
+        <%= link_to notification.to_notification.url,  class: "block hover:bg-gray-50" do %>
+          <div class="px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between">
+              <p class="text-md font-semibold text-gray-700 truncate">
+                <%= notification.type.titlecase %>
+              </p>
+            </div>
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-thin text-gray-700 truncate">
+                <%= notification.to_notification.message %>
+              </p>
+            </div>
+            <div class="mt-2 sm:flex sm:justify-between">
+              <div class="sm:flex">
+                <p class="flex items-center text-sm font-light text-gray-500">
+                  <%= distance_of_time_in_words(Time.zone.now, notification.created_at) %> ago
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+  <%= link_to notification_all_as_reads_path, method: :post, class: "inline-flex items-center m-4 px-4 py-1.5 btn btn-blue btn-outline" do %>
+    Mark As Read
+  <% end %>
+</div>
+<div class="bg-brand-light px-4 py-5 border-b rounded-t sm:px-6 mt-3">
+  <h3 class="text-lg leading-6 font-medium text-white">
+    Read Notifications (Last 30)
+  </h3>
+</div>
+<div class="bg-white shadow overflow-hidden sm:rounded-md">
+  <ul class="divide-y divide-gray-200">
+      <% current_user.notifications.read.newest_first.limit(30).each do |notification| %>
+      <li>
+        <%= link_to notification.to_notification.url,  class: "block hover:bg-gray-50" do %>
+          <div class="px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between">
+              <p class="text-md font-semibold text-gray-700 truncate">
+                <%= notification.type.titlecase %>
+              </p>
+            </div>
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-thin text-gray-700 truncate">
+                <%= notification.to_notification.message %>
+              </p>
+            </div>
+            <div class="mt-2 sm:flex sm:justify-between">
+              <div class="sm:flex">
+                <p class="flex items-center text-sm font-light text-gray-500">
+                  <%= distance_of_time_in_words(Time.zone.now, notification.created_at) %> ago
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
