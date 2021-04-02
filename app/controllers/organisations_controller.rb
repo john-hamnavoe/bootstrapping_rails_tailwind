@@ -6,9 +6,9 @@ class OrganisationsController < ApplicationController
 
   def create
     @organisation = Organisation.new(organisation_params)
-    @organisation.user_id = current_user.id
+    @organisation.owner = current_user
     if @organisation.save
-      OrganisationMembership.create(organisation_id: @organisation.id, user_id: current_user.id, is_admin: true)
+      OrganisationMembership.create(organisation_id: @organisation.id, user: current_user, is_admin: true)
       redirect_to root_path
     else
       render "new"
@@ -38,7 +38,7 @@ class OrganisationsController < ApplicationController
   end
 
   def user_is_owner
-    @organisation = Organisation.find_by(id: params[:id], user_id: current_user.id)
+    @organisation = Organisation.find_by(id: params[:id], owner: current_user)
     redirect_to root_path unless @organisation
   end
 end

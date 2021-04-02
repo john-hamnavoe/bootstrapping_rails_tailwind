@@ -54,6 +54,7 @@ def add_users
   append_to_file("app/models/user.rb", "\n  has_person_name\n", after: "class User < ApplicationRecord")
   append_to_file("app/models/user.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error\n", after: "class User < ApplicationRecord")
   append_to_file("app/models/user.rb", "\n  has_many :notifications, as: :recipient\n", after: "class User < ApplicationRecord")
+  append_to_file("app/models/user.rb", "\n  belongs_to :current_organisation, class_name: \"Organisation\", optional: true\n", after: "class User < ApplicationRecord")
 end
 
 def copy_templates
@@ -115,11 +116,25 @@ def add_notifications
 end
 
 def add_organisations
-  generate :model, "organisation", "name:string", "user:references"
+  generate :model, "organisation", "name:string", "owner:references"
+  # set fk table correctly on owner
+  in_root do
+    migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
+    gsub_file migration, /foreign_key: true/, "foreign_key: { to_table: :users }"
+  end
+  append_to_file("app/models/organisation.rb", "\n  has_one_attached :logo\n", after: "belongs_to :owner")
+  append_to_file("app/models/organisation.rb", ", class_name: \"User\"", after: "belongs_to :owner")
+
+  generate :migration, "AddCurrentOrganisationToUsers", "current_organisation:references"
+  in_root do
+    migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
+    gsub_file migration, /null: false, foreign_key: true/, "null: true, foreign_key: { to_table: :organisations }"
+  end
+
   generate :model, "organisation_membership", "organisation:references", "user:references", "is_admin:boolean"
   route "resources :organisations, only: [:new, :edit, :update, :create]"
 
-  append_to_file("app/models/organisation.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error \n", after: "belongs_to :user")
+  append_to_file("app/models/organisation.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error\n", after: "belongs_to :owner, class_name: \"User\"")
 end
 
 def add_stimulus_and_reflex
@@ -161,6 +176,8 @@ after_bundle do
   add_organisations
   add_stimulus_and_reflex
 
+  rails_command "active_storage:install"
+  
   # Migrate
   rails_command "db:create"
   rails_command "db:migrate"
@@ -176,5 +193,5 @@ after_bundle do
   say "$ cd #{app_name}", :yellow
   say
   say "Then run:"
-  say "$ rails server", :green
+  say "$ foreman start -f Procfile.dev", :green
 end

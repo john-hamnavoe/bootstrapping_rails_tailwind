@@ -1,18 +1,10 @@
 <%= form_for(@organisation) do |f| %>
-  <div class="lg:grid lg:grid-cols-3 lg:gap-6">
+  <div class="lg:grid lg:grid-cols-2 lg:gap-6">
     <div class="<%= @organisation.id.nil? ? "lg:col-span-3" : "lg:col-span-1" %>">
       <div class="input-group">
         <%= f.label :name, class: 'label' %>
         <%= f.text_field :name, class: 'input', placeholder: 'Enter organisation name...', required: true %>
       </div>
-      <div class="input-group">
-        <%= f.label :notify_email, class: 'label' %>
-        <%= f.email_field :notify_email, class: 'input', placeholder: 'Enter notification group email...' %>
-      </div>
-      <div class="input-group">
-        <%= f.label :tag_notify_email, class: 'label' %>
-        <%= f.email_field :tag_notify_email, class: 'input', placeholder: 'Enter tag notification group email...' %>
-      </div>      
       <div class="flex items-start">
         <%= f.check_box :active, class: "input-checkbox" %>
         <%= f.label :active, class: "ml-3 label" %>
@@ -32,28 +24,6 @@
         </div>
         <%= f.file_field :logo %>
       </div>
-      <div class="lg:col-span-1">
-        <label class="label">Defaults</label>
-        <div class="input-group">
-          <div class="flex items-start">
-            <%= f.check_box :accept_less_than_planned, class: "input-checkbox" %>
-            <%= f.label "Accept less than planned (min of 1 lift)?", class:"ml-3 label" %>
-          </div>
-          <div class="flex items-start">
-            <%= f.check_box :accept_different_material, class: "input-checkbox" %>
-            <%= f.label "Accept different material on order?", class:"ml-3 label" %>
-          </div>
-          <div class="flex items-start">
-            <%= f.check_box :accept_no_lift_if_min_one_reason, class: "input-checkbox" %>
-            <%= f.label "Accept no lift if at least one reason recorded?", class:"ml-3 label" %>
-          </div>
-          <div class="md:flex md:items-center mb-6">
-            <div class="md:w-3/4">
-              <%= f.label :minutes_margin_on_unmatched, class: 'label mt-2' %>
-            </div>
-            <div class="md:w-1/4">
-              <%= f.number_field :minutes_margin_on_unmatched, class: 'input input-sm', placeholder: 'Enter minutes...', required: true %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
+    <% end %>
+  </div>
+<% end %>
