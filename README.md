@@ -46,6 +46,8 @@ NOTE: If it asked to override application_reflex.rb then say no. (Just type n).
 - Fontawesome Fonts
 - Sortable JS
 - Notifications via noticed gem
+- Devise Invitable - invite people to the app
+- Organisation and Organisation Memberships - devide application into organisations and have members of the organisation
 
 ### Boot it up
 
