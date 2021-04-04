@@ -11,6 +11,7 @@ end
 
 def add_gems
   gem 'devise', '~> 4.7', '>= 4.7.3'
+  gem 'devise_invitable', '~> 2.0.0'
   gem 'font-awesome-sass', '~> 5.15.1'
   gem 'friendly_id', '~> 5.4', '>= 5.4.1'
   gem 'noticed', '~> 1.2', '>= 1.2.21'
@@ -141,6 +142,12 @@ def add_stimulus_and_reflex
   gem 'stimulus_reflex', '~> 3.4'
   rails_command "webpacker:install:stimulus"
   rails_command "stimulus_reflex:install"
+
+  # put our application_reflex.rb in after the stimulus install
+  remove_file "app/reflexes/application_reflex.rb"
+  copy_file "app/reflexes/application_reflex.rb.erb", "./app/reflexes/application_reflex.rb"
+  remove_file "app/reflexes/application_reflex.rb.erb"
+
   run "yarn add tailwindcss-stimulus-components"
 
   append_to_file("app/javascript/controllers/index.js", "\nimport { Dropdown, Modal, Tabs, Popover, Toggle, Slideover } from \"tailwindcss-stimulus-components\"")
