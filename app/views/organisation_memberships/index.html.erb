@@ -1,0 +1,68 @@
+<div class="bg-brand px-4 py-2 border-b rounded-t sm:px-6">
+  <h3 class="text-lg leading-6 font-medium text-white">
+    Members
+  </h3>
+</div>
+<div class="bg-white shadow overflow-hidden sm:rounded-md">
+  <%= link_to "Invite User", new_user_invitation_path, class: 'btn btn-default mx-4 my-2' %>
+  <%= hover_table do %>
+    <%= table_head do %>
+      <%= table_row do %>
+        <%= table_column "email" %>
+        <%= table_column "First Name" %>
+        <%= table_column "Last Name" %>
+        <%= table_column %>
+        <%= table_column %>
+      <% end %>
+    <% end %>
+    <%= table_body do %>
+      <% @organisation_memberships.each do |om| %>
+        <%= table_row do %>
+          <%= table_data om.user.email %>
+          <%= table_data  om.user.first_name %>
+          <%= table_data  om.user.last_name %>
+          <% if om.id == current_organisation.owner_id %>
+            <%= table_data "owner" %>
+          <% elsif om.is_admin %>
+            <%= table_data do link_to "make non-admin", organisation_membership_path(om.id, organisation_membership: { is_admin: false }), method: 'patch', class: "btn btn-default text-xs" end %>
+          <% else %>
+            <%= table_data do link_to "make admin", organisation_membership_path(om.id, organisation_membership: { is_admin: true }), method: 'patch', class: "btn btn-default text-xs" end %>
+          <% end %>
+          <% if om.id == current_organisation.owner_id %>
+            <%= table_data %>
+          <% else %>
+            <%= table_data do link_to "remove", organisation_membership_path(om.id),  method: :delete, class: "btn btn-red text-xs" end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+<div class="bg-brand-light px-4 py-2 border-b rounded-t sm:px-6 mt-3">
+  <h3 class="text-lg leading-6 font-medium text-white">
+    Add Members
+  </h3>
+</div>
+<%= hover_table do %>
+  <%= table_head do %>
+    <%= table_row do %>
+      <%= table_column "email" %>
+      <%= table_column "First Name" %>
+      <%= table_column "Last Name" %>
+      <%= table_column %>
+      <%= table_column %>
+    <% end %>
+  <% end %>
+  <%= table_body do %>
+    <% @organisation_potential_memberships.each do |omp| %>
+      <tr>
+        <td><%= omp.email %></td>
+        <td><%= omp.first_name %></td>
+        <td><%= omp.last_name %></td>
+        <td><%= link_to "add", organisation_memberships_path(organisation_membership: { user_id: omp.id }),  method: :post, class: "btn btn-default text-xs" %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  <% end %>
+<% end %>
+</div>

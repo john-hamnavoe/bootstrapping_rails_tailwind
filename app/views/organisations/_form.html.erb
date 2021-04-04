@@ -5,6 +5,14 @@
         <%= f.label :name, class: 'label' %>
         <%= f.text_field :name, class: 'input', placeholder: 'Enter organisation name...', required: true %>
       </div>
+      <div class="input-group">
+        <%= f.label :domain, class: 'label' %>
+        <%= f.text_field :domain, class: 'input', placeholder: 'Enter your organisations email domain...' %>
+      </div>
+      <div class="flex items-start">
+        <%= f.check_box :restrict_to_domain, class: "input-checkbox" %>
+        <%= f.label :restrict_to_domain, class: "ml-3 label" %>
+      </div>      
       <div class="flex items-start">
         <%= f.check_box :active, class: "input-checkbox" %>
         <%= f.label :active, class: "ml-3 label" %>

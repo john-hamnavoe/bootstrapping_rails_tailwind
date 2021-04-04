@@ -16,6 +16,14 @@ class ApplicationController < ActionController::Base
     redirect_to new_organisation_path if current_user.current_organisation.nil?
   end
 
+  def user_organisation_admin!
+    organisation_membership ||= OrganisationMembership.find_by(user: current_user, organisation: current_organisation)
+    admin_user = (current_user.id == current_organisation.owner_id) || organisation_membership&.is_admin
+    return if admin_user
+
+    redirect_to root_path
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
     devise_parameter_sanitizer.permit(:account_update, keys: [:name])

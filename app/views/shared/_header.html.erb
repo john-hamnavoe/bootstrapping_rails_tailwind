@@ -38,7 +38,8 @@
               <% if current_organisation.present? %>
                 <div class="py-1" role="none">
                   <%= link_to 'Organisation Settings',  edit_organisation_path(current_organisation), class:"block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900", role: "menuitem" %>
-                </div>
+                  <%= link_to 'Organisation Members', organisation_memberships_path, class:"block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900", role: "menuitem" %>                
+                </div>                
               <% end %>
               <div class="py-1" role="none">
                 <%= link_to "Your Settings", edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900", role:"menuitem" %>

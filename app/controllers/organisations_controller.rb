@@ -34,7 +34,7 @@ class OrganisationsController < ApplicationController
   private
 
   def organisation_params
-    params.require(:organisation).permit(:name)
+    params.require(:organisation).permit(:name, :restrict_to_domain, :logo, :domain)
   end
 
   def user_is_owner

@@ -56,6 +56,13 @@ def add_users
   append_to_file("app/models/user.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error\n", after: "class User < ApplicationRecord")
   append_to_file("app/models/user.rb", "\n  has_many :notifications, as: :recipient\n", after: "class User < ApplicationRecord")
   append_to_file("app/models/user.rb", "\n  belongs_to :current_organisation, class_name: \"Organisation\", optional: true\n", after: "class User < ApplicationRecord")
+
+  # devise invitable 
+  generate "devise_invitable:install"
+  generate "devise_invitable User"
+  # seems to be necessary
+  append_to_file("app/models/user.rb", " :invitable,", after: "devise")
+  insert_into_file "config/routes.rb", ', controllers: { invitations: "users/invitations" }', after: "  devise_for :users"
 end
 
 def copy_templates
@@ -117,11 +124,13 @@ def add_notifications
 end
 
 def add_organisations
-  generate :model, "organisation", "name:string", "owner:references"
+  generate :model, "organisation", "name:string", "owner:references", "domain:string", "restrict_to_domain:boolean", "active:boolean"
   # set fk table correctly on owner
   in_root do
     migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
     gsub_file migration, /foreign_key: true/, "foreign_key: { to_table: :users }"
+    gsub_file migration, /:active/, ":active, default: true"
+    gsub_file migration, /:restrict_to_domain/, ":restrict_to_domain, default: true"
   end
   append_to_file("app/models/organisation.rb", "\n  has_one_attached :logo\n", after: "belongs_to :owner")
   append_to_file("app/models/organisation.rb", ", class_name: \"User\"", after: "belongs_to :owner")
