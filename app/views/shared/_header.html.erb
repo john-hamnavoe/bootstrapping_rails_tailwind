@@ -13,8 +13,8 @@
     <div class="items-center block w-full text-center lg:flex-1 lg:flex lg:text-left">
       <div class="lg:flex-grow">
         <% if user_signed_in? %>
-          <%= link_to root_path, class: nav_link_class(["/home"], "purple-500") do %>
-            <i class="fas fa-chart-line fa-fw mr-2"></i><span class="pb-1 md:pb-0 text-sm">Basic Link</span>
+          <%= link_to dashboard_index_path, class: nav_link_class(["/dashboards"], "purple-500") do %>
+            <i class="fas fa-chart-line fa-fw mr-2"></i><span class="pb-1 md:pb-0 text-sm">Dashboard</span>
           <% end %>
         <% end %>
       </div>

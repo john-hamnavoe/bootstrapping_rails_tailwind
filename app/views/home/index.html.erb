@@ -1,4 +1,24 @@
-<div class="max-w-lg mx-auto mt-16 text-center">
-  <h1 class="mb-4 text-3xl font-black">Welcome to Hamnavoe Partners!</h1>
-  <p class="text-lg leading-snug">Use this starting point as a way to quickly set up a new project by generating files, installing gems, and more.</p>
+<div class="grid lg:grid-cols-2 2xl:grid-cols-5 bg-gray-100">
+  <div class="px-8 py-12 max-w-md mx-auto sm:max-w-xl lg:px-12 lg:py-24 lg:max-w-full xl:mr-0 2xl:col-span-2">
+    <div class="xl:max-w-xl">
+      <%= image_tag("logo.svg", alt: "hamnavoe partners - app", class: "h-10")%>
+      <%= image_tag("work-unsplash.jpg", alt: "Working at desk together", class:"mt-6 rounded-lg shadow-xl sm:mt-8 sm:h-64 sm:w-full sm:object-cover object-center lg:hidden") %>
+      <h1 class="mt-6 text-2xl font-headline tracking-tight font-semibold text-brand sm:mt-8 sm:text-4xl lg:text-3xl xl:text-4xl">Need something better?
+        <br class="hidden lg:inline">
+        <span class="mt-6 text-2xl font-headline tracking-tight font-semibold text-brand sm:mt-8 sm:text-4xl lg:text-3xl xl:text-4xl">Old apps not working?</span>
+        <br class="hidden lg:inline">
+        <span class="text-brand-light">Take care of it.</span>
+      </h1>
+      <p class="mt-2 text-gray-600 sm:mt-4 sm:text-xl">
+        hamnavoe partners app - will help you
+      </p>
+      <div class="mt-4 space-x-1 sm:mt-6">
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-default hover:-translate-y-0.5 shadow-lg transform transition" %>
+      </div>
+    </div>
+  </div>
+  <div class="hidden relative lg:block 2xl:col-span-3">
+    <%= image_tag("work-unsplash.jpg", alt: "Working at desk together", class: "absolute inset-0 w-full h-full object-cover object-center") %>
+  </div>
 </div>
+

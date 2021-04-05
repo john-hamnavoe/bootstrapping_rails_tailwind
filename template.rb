@@ -197,6 +197,12 @@ def add_grid_columns
   insert_into_file "config/routes.rb", "#{content}\n\n", after: "root to: 'home#index'\n"
 end
 
+def add_dashboard
+  generate :model, "dashboard_metric", "name:string", "title:string", "icon:string", "color:string", "position:integer"
+  generate :model, "dashboard_metric_snapshot", "organisation:references", "dashboard_metric:references", "date:date", "value:integer", "last_value:integer"
+  route "resources :dashboard, only: [:index]"
+end
+
 # Main setup
 source_paths
 
@@ -214,6 +220,7 @@ after_bundle do
   add_organisations
   add_stimulus_and_reflex
   add_grid_columns
+  add_dashboard
 
   rails_command "active_storage:install"
   
