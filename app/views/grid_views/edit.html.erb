@@ -1,0 +1,40 @@
+<%
+  content_for(:page_title, 'Column Settings')
+  content_for(:child_title, @grid_view.grid.label )
+  content_for(:index_path, user_grid_views_path(current_user.id))  
+%>
+<h2 class="max-w-4xl mx-auto my-8 font-bold heading"><%=@grid_view.grid.label%> Columns</h2>
+<div class="max-w-4xl mx-auto my-8">
+  <div class="bg-white border border-gray-300 rounded-lg px-8 pt-6 pb-8">
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-bold text-gray-800 mb-4">Columns Available for this Grid</h4>
+        <div class="">
+          <% @available_columns.each do |column| %>
+            <div class="border rounded-xl border-blue-400 px-4 pt-1 pb-1 mb-1">
+                <span class="text-sm"><%= column.label %></span>
+                <%= link_to "+", user_grid_view_columns_path(current_user.id, grid_view_column: { grid_view_id: @grid_view.id, column_id: column.id }), method: 'post', remote: true, class: "btn btn-default btn-sm float-right" %>
+            </div>
+          <% end %>
+        </div>        
+      </div>
+      <div>
+        <h4 class="font-bold text-gray-800 mb-4">Columns Visible for this Grid (drag to position)</h4>
+        <div data-controller="drag" data-drag-url=<%="/users/#{current_user.id}/grid_view_columns/:id/move"%>>
+          <% if @grid_view %>
+            <% @grid_view.grid_view_columns.sort_by { |c| c.position }.each do |column| %>
+              <div data-id="<%= column.id %>" class="border rounded-xl border-green-400 px-4 pt-1 pb-1 mb-1">
+                <span>
+                  <span><%= column.column&.label %></span>
+                  <%= link_to "-", user_grid_view_column_path(current_user.id, column.id), method: 'delete', remote: true, class: "btn btn-default btn-sm float-right" %>
+                </span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>        
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= link_to "back", user_grid_views_path(current_user.id), class: "btn btn-link" %>

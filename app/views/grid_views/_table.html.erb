@@ -1,0 +1,31 @@
+<div class="table-responsive">
+  <%= hover_table do %>
+    <%= table_head do %>
+      <%= table_row do %>                       
+        <%= table_column "Grid Name"  %>    
+        <%= table_column %>
+        <%= table_column %>        
+      <% end %>
+    <% end %>
+    <%= table_body do %>
+      <% grids.each do |grid| %>
+        <% user_grid_view = grid.grid_views.by_user(current_user).first %>   
+        <%= table_row do %>      
+          <%= table_data grid.label %>
+            <%= table_data do %>
+              <% if user_grid_view.nil? %>
+                <%= link_to "Customize", user_grid_views_path(current_user.id, {params: {grid_id: grid.id}}), method: :post, class: "btn btn-default text-xs" %>
+              <% else %>
+                <%= link_to "Customize", edit_user_grid_view_path(current_user.id, user_grid_view.id), class: "btn btn-default text-xs" %>
+              <% end %>
+            <% end %>
+            <%= table_data do %>
+              <% unless user_grid_view.nil? %>
+                <%= link_to "Factory Reset", user_grid_view_path(current_user.id, user_grid_view.id), method: :delete, class: "btn btn-red text-xs" %>
+              <% end %>
+            <% end %>              
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

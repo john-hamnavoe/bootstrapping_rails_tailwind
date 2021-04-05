@@ -143,6 +143,7 @@ def add_organisations
 
   generate :model, "organisation_membership", "organisation:references", "user:references", "is_admin:boolean"
   route "resources :organisations, only: [:new, :edit, :update, :create]"
+  route "resources :organisation_memberships, only: [:destroy, :index, :create, :update]"
 
   append_to_file("app/models/organisation.rb", "\n  has_many :organisation_memberships, dependent: :restrict_with_error\n", after: "belongs_to :owner, class_name: \"User\"")
 end
@@ -175,6 +176,27 @@ def add_stimulus_and_reflex
   copy_file "drag_controller.js", "./app/javascript/controllers/drag_controller.js"
 end
 
+def add_grid_columns
+  generate :model, "grid", "name:string", "label:string"
+  generate :model, "column", "name:string", "label:string", "sortable:boolean", "default_on:boolean", "default_position:integer", "field:string", "object_1:string", "object_2:string", "grid:references"
+  generate :model, "grid_view", "name:string", "grid:references", "user:references"
+  generate :model, "grid_view_column", "grid_view:references", "column:references", "label:string", "position:integer"
+
+  route "resources :grid_views, only: [:index]"
+
+  content = <<-RUBY
+    resources :users, only: [:index] do
+      resources :grid_views, only: [:index, :create, :edit, :destroy]
+      resources :grid_view_columns, only: [:create, :destroy] do
+        member do
+          patch :move
+        end
+      end
+    end
+  RUBY
+  insert_into_file "config/routes.rb", "#{content}\n\n", after: "root to: 'home#index'\n"
+end
+
 # Main setup
 source_paths
 
@@ -191,6 +213,7 @@ after_bundle do
   add_notifications
   add_organisations
   add_stimulus_and_reflex
+  add_grid_columns
 
   rails_command "active_storage:install"
   
